@@ -91,7 +91,9 @@ export function Hero() {
       gsap.set("[data-hero-sub]", { opacity: 0, y: 18 });
       gsap.set("[data-hero-cta]", { opacity: 0, y: 20 });
       gsap.set("[data-hero-scroll]", { opacity: 0 });
-      gsap.set("[data-hero-count]", { opacity: 0, y: 12 });
+      if (root.querySelector("[data-hero-count]")) {
+        gsap.set("[data-hero-count]", { opacity: 0, y: 12 });
+      }
     }, root);
     return () => ctx.revert();
   }, []);
@@ -148,9 +150,13 @@ export function Hero() {
         .to("[data-hero-rule]", { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, 1.5)
         .to("[data-hero-sub]", { opacity: 1, y: 0, duration: 0.8 }, 1.6)
         .to("[data-hero-cta] [data-hero-char]", { opacity: 1, y: 0, duration: 0.7, stagger: 0.05 }, 1.75)
-        .to("[data-hero-flap]", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 1.9)
-        .to("[data-hero-count]", { opacity: 1, y: 0, duration: 0.7, stagger: 0.08 }, 2.0)
-        .to("[data-hero-scroll]", { opacity: 1, duration: 0.7 }, 2.15)
+        .to("[data-hero-flap]", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 1.9);
+
+      if (root.querySelector("[data-hero-count]")) {
+        tl.to("[data-hero-count]", { opacity: 1, y: 0, duration: 0.7, stagger: 0.08 }, 2.0);
+      }
+
+      tl.to("[data-hero-scroll]", { opacity: 1, duration: 0.7 }, 2.15)
         // Slow Ken Burns drift
         .to("[data-hero-frame]", { scale: 1.07, duration: 30, ease: "none" }, 3.0);
     }, root);

@@ -29,6 +29,7 @@ function Lightbox({
   onNext: () => void;
 }) {
   const [mounted, setMounted] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
   const piece = pieces[index];
 
   useEffect(() => {
@@ -45,6 +46,19 @@ function Lightbox({
     return () => window.removeEventListener("keydown", fn);
   }, [onClose, onPrev, onNext]);
 
+  function handleTouchStart(e: React.TouchEvent) {
+    setTouchStart(e.touches[0].clientX);
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStart === null) return;
+    const touchEnd = e.changedTouches[0].clientX;
+    const diff = touchStart - touchEnd;
+    if (diff > 40) onNext();
+    if (diff < -40) onPrev();
+    setTouchStart(null);
+  }
+
   if (!mounted || !piece) return null;
 
   return createPortal(
@@ -52,41 +66,43 @@ function Lightbox({
       role="dialog"
       aria-modal="true"
       aria-label={piece.title}
-      className="fixed inset-0 z-[99999] flex flex-col justify-between bg-[#080807]/98 backdrop-blur-lg p-4 sm:p-8"
+      className="fixed inset-0 z-[99999] flex flex-col justify-between bg-[#080807]/98 backdrop-blur-lg p-3 sm:p-6 lg:p-8"
       onClick={onClose}
     >
       {/* Top Header Bar */}
       <div
-        className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4"
+        className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3 sm:pb-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div>
-          <h3 className="font-display text-xl sm:text-2xl font-medium text-white">{piece.title}</h3>
-          <p className="label mt-1 text-xs text-gold font-semibold">{piece.category}</p>
+        <div className="pr-2 min-w-0 flex-1">
+          <h3 className="font-display text-base sm:text-xl md:text-2xl font-medium text-white truncate">{piece.title}</h3>
+          <p className="label mt-0.5 text-[0.6875rem] sm:text-xs text-gold font-semibold truncate">{piece.category}</p>
         </div>
         <button
           type="button"
           aria-label="Close dialog"
           onClick={onClose}
-          className="label inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-2 text-xs font-semibold text-white transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-md"
+          className="label shrink-0 inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/10 px-3.5 py-1.5 text-[0.7rem] sm:px-5 sm:py-2 sm:text-xs font-semibold text-white transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-md"
         >
           <span>Close</span>
-          <span className="text-sm font-bold">✕</span>
+          <span className="text-xs font-bold sm:text-sm">✕</span>
         </button>
       </div>
 
-      {/* Main Image View */}
+      {/* Main Image View with Touch Support */}
       <div
-        className="relative flex flex-1 items-center justify-center py-4"
+        className="relative flex flex-1 items-center justify-center py-2 sm:py-4 overflow-hidden select-none"
         onClick={(e) => e.stopPropagation()}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           key={piece.src}
           src={piece.src}
           alt={piece.title}
-          className="max-h-[70vh] sm:max-h-[76vh] w-auto max-w-full object-contain rounded-sm shadow-2xl transition-all duration-300"
-          style={{ animation: "adLbFade 0.3s cubic-bezier(0.16,1,0.3,1) both" }}
+          className="max-h-[62vh] sm:max-h-[74vh] w-auto max-w-full object-contain rounded-sm shadow-2xl transition-all duration-300"
+          style={{ animation: "adLbFade 0.25s cubic-bezier(0.16,1,0.3,1) both" }}
           loading="eager"
         />
 
@@ -99,7 +115,7 @@ function Lightbox({
                 e.stopPropagation();
                 onPrev();
               }}
-              className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
+              className="absolute left-1 sm:left-6 top-1/2 -translate-y-1/2 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-lg sm:text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
             >
               ←
             </button>
@@ -110,7 +126,7 @@ function Lightbox({
                 e.stopPropagation();
                 onNext();
               }}
-              className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
+              className="absolute right-1 sm:right-6 top-1/2 -translate-y-1/2 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-lg sm:text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
             >
               →
             </button>
@@ -118,21 +134,38 @@ function Lightbox({
         )}
       </div>
 
-      {/* Bottom Footer Bar */}
+      {/* Bottom Footer Bar with Mobile Navigation Controls */}
       <div
-        className="relative z-10 flex items-center justify-between border-t border-white/10 pt-4"
+        className="relative z-10 flex items-center justify-between border-t border-white/10 pt-3 sm:pt-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <span className="label text-xs text-white/80 font-medium">
-          Piece <span className="text-gold font-bold">{index + 1}</span> of <span className="text-gold font-bold">{pieces.length}</span>
+        <div className="flex items-center gap-2">
+          {pieces.length > 1 && (
+            <div className="flex items-center gap-1.5 sm:hidden">
+              <button
+                type="button"
+                onClick={onPrev}
+                className="label px-2.5 py-1 rounded bg-white/10 border border-white/20 text-[0.65rem] text-white"
+              >
+                ← Prev
+              </button>
+              <button
+                type="button"
+                onClick={onNext}
+                className="label px-2.5 py-1 rounded bg-white/10 border border-white/20 text-[0.65rem] text-white"
+              >
+                Next →
+              </button>
+            </div>
+          )}
+          <span className="label text-[0.7rem] sm:text-xs text-white/90 font-medium">
+            Piece <span className="text-gold font-bold">{index + 1}</span> of <span className="text-gold font-bold">{pieces.length}</span>
+          </span>
+        </div>
+
+        <span className="label text-xs text-white/50 hidden sm:inline-block">
+          Swipe or Use ← → Arrow Keys
         </span>
-        <button
-          type="button"
-          onClick={onClose}
-          className="label text-xs text-white/60 hover:text-gold transition-colors hidden sm:block"
-        >
-          Press ESC to exit
-        </button>
       </div>
 
       <style>{`

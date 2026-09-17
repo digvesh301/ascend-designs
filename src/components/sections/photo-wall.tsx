@@ -132,6 +132,7 @@ function ProjectViewer({
   onNextProject: () => void;
 }) {
   const [mounted, setMounted] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -147,6 +148,19 @@ function ProjectViewer({
     return () => window.removeEventListener("keydown", fn);
   }, [onClose, onPrevImage, onNextImage]);
 
+  function handleTouchStart(e: React.TouchEvent) {
+    setTouchStart(e.touches[0].clientX);
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStart === null) return;
+    const touchEnd = e.changedTouches[0].clientX;
+    const diff = touchStart - touchEnd;
+    if (diff > 40) onNextImage();
+    if (diff < -40) onPrevImage();
+    setTouchStart(null);
+  }
+
   if (!mounted || !project) return null;
 
   const src = project.gallery[imageIndex] ?? project.image;
@@ -156,17 +170,17 @@ function ProjectViewer({
       role="dialog"
       aria-modal="true"
       aria-label={project.title}
-      className="fixed inset-0 z-[99999] flex flex-col justify-between bg-[#080807]/98 backdrop-blur-lg p-5 sm:p-8"
+      className="fixed inset-0 z-[99999] flex flex-col justify-between bg-[#080807]/98 backdrop-blur-lg p-3 sm:p-6 lg:p-8"
       onClick={onClose}
     >
       {/* Top bar */}
       <div
-        className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4"
+        className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3 sm:pb-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div>
-          <p className="label text-gold font-semibold text-xs">{project.category}</p>
-          <h3 className="font-display text-xl font-medium text-white sm:text-2xl mt-0.5">
+        <div className="pr-2 min-w-0 flex-1">
+          <p className="label text-gold font-semibold text-[0.6875rem] sm:text-xs">{project.category}</p>
+          <h3 className="font-display text-base sm:text-xl md:text-2xl font-medium text-white truncate mt-0.5">
             {project.title}
           </h3>
         </div>
@@ -174,25 +188,27 @@ function ProjectViewer({
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="label inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-2 text-xs font-semibold text-white transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-md"
+          className="label shrink-0 inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/10 px-3.5 py-1.5 text-[0.7rem] sm:px-5 sm:py-2 sm:text-xs font-semibold text-white transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-md"
         >
           <span>Close</span>
-          <span className="text-sm font-bold">✕</span>
+          <span className="text-xs font-bold sm:text-sm">✕</span>
         </button>
       </div>
 
-      {/* Image */}
+      {/* Image View with Touch Support */}
       <div
-        className="relative flex flex-1 items-center justify-center py-4"
+        className="relative flex flex-1 items-center justify-center py-2 sm:py-4 overflow-hidden select-none"
         onClick={(e) => e.stopPropagation()}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           key={src}
           src={src}
           alt={project.title}
-          className="max-h-[68vh] sm:max-h-[74vh] w-auto max-w-full object-contain rounded-sm shadow-2xl transition-all duration-300"
-          style={{ animation: "pvFade 0.3s cubic-bezier(0.16,1,0.3,1) both" }}
+          className="max-h-[60vh] sm:max-h-[74vh] w-auto max-w-full object-contain rounded-sm shadow-2xl transition-all duration-300"
+          style={{ animation: "pvFade 0.25s cubic-bezier(0.16,1,0.3,1) both" }}
           loading="eager"
         />
         {project.gallery.length > 1 && (
@@ -204,7 +220,7 @@ function ProjectViewer({
                 e.stopPropagation();
                 onPrevImage();
               }}
-              className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
+              className="absolute left-1 sm:left-6 top-1/2 -translate-y-1/2 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-lg sm:text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
             >
               ←
             </button>
@@ -215,7 +231,7 @@ function ProjectViewer({
                 e.stopPropagation();
                 onNextImage();
               }}
-              className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
+              className="absolute right-1 sm:right-6 top-1/2 -translate-y-1/2 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-lg sm:text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
             >
               →
             </button>
@@ -225,35 +241,25 @@ function ProjectViewer({
 
       {/* Bottom info bar */}
       <div
-        className="relative z-10 flex flex-col gap-4 border-t border-white/10 pt-4 sm:flex-row sm:items-end sm:justify-between"
+        className="relative z-10 flex flex-col gap-3 border-t border-white/10 pt-3 sm:pt-4 sm:flex-row sm:items-end sm:justify-between"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="max-w-xl">
-          <p className="label text-xs text-white/80 font-medium">
+          <p className="label text-[0.6875rem] sm:text-xs text-white/80 font-medium">
             {project.location} · {project.year}
           </p>
-          <p className="mt-1.5 text-sm leading-relaxed text-white/90 font-normal">
+          <p className="mt-1 text-xs sm:text-sm leading-relaxed text-white/90 font-normal line-clamp-2 sm:line-clamp-none">
             {project.description}
           </p>
-          <div className="mt-2.5 flex flex-wrap gap-2">
-            {project.services.map((s) => (
-              <span
-                key={s}
-                className="label border border-gold/40 bg-gold/10 px-3 py-1 text-xs text-gold font-medium rounded-full"
-              >
-                {s}
-              </span>
-            ))}
-          </div>
         </div>
-        <div className="flex shrink-0 items-center gap-6">
-          <p className="label text-xs text-white/70 font-medium">
+        <div className="flex shrink-0 items-center justify-between sm:justify-start gap-4">
+          <p className="label text-[0.7rem] sm:text-xs text-white/70 font-medium">
             Photo <span className="text-gold font-bold">{imageIndex + 1}</span> of <span className="text-gold font-bold">{project.gallery.length}</span>
           </p>
           <button
             type="button"
             onClick={onNextProject}
-            className="label inline-flex items-center gap-2 text-gold text-xs font-semibold hover:text-white transition-colors"
+            className="label inline-flex items-center gap-1.5 text-gold text-xs font-semibold hover:text-white transition-colors"
           >
             Next Project <span aria-hidden>→</span>
           </button>
