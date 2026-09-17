@@ -303,7 +303,7 @@ export function Nav() {
             <button
               type="button"
               onClick={() => setInquiryOpen(true)}
-              className="group relative inline-flex items-center gap-2.5 overflow-hidden border border-gold/50 bg-gold/10 px-6 py-2.5 text-xs font-semibold tracking-[0.16em] uppercase text-gold backdrop-blur-sm transition-all duration-300 hover:border-gold hover:bg-gold hover:text-black hover:shadow-[0_0_20px_rgba(212,175,55,0.25)] cursor-pointer"
+              className="group relative inline-flex items-center gap-2.5 overflow-hidden border border-gold/50 bg-gold/10 px-6 py-2.5 text-xs font-semibold tracking-[0.16em] uppercase text-gold backdrop-blur-sm transition-all duration-300 hover:border-gold hover:bg-gold hover:text-black hover:shadow-[0_0_20px_rgba(201,142,77,0.25)] cursor-pointer"
             >
               {/* Shimmer sweep highlight */}
               <span

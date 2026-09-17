@@ -222,7 +222,7 @@ export function Hero() {
           </span>
           {/* Line 2 — italic + gold */}
           <span data-hero-line2 className="block text-[clamp(2.5rem,7vw,7.5rem)] font-normal">
-            <AnimChars text="With Intention." className="italic text-gold drop-shadow-[0_2px_12px_rgba(212,175,55,0.25)]" />
+            <AnimChars text="With Intention." className="italic text-gold drop-shadow-[0_2px_12px_rgba(201,142,77,0.25)]" />
           </span>
         </h1>
 
