@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { gsap } from "@/lib/gsap";
 import { adLivingPieces, type AdLivingPiece } from "@/data/ad-living";
 
@@ -27,7 +28,12 @@ function Lightbox({
   onPrev: () => void;
   onNext: () => void;
 }) {
+  const [mounted, setMounted] = useState(false);
   const piece = pieces[index];
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const fn = (e: KeyboardEvent) => {
@@ -39,77 +45,104 @@ function Lightbox({
     return () => window.removeEventListener("keydown", fn);
   }, [onClose, onPrev, onNext]);
 
-  return (
+  if (!mounted || !piece) return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-[999] flex items-center justify-center bg-[#080807]/95 backdrop-blur-md"
+      role="dialog"
+      aria-modal="true"
+      aria-label={piece.title}
+      className="fixed inset-0 z-[99999] flex flex-col justify-between bg-[#080807]/98 backdrop-blur-lg p-4 sm:p-8"
       onClick={onClose}
     >
+      {/* Top Header Bar */}
       <div
-        className="relative flex max-h-[92svh] max-w-[90vw] flex-col"
+        className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4"
         onClick={(e) => e.stopPropagation()}
-        style={{ animation: "adLbFade 0.35s cubic-bezier(0.16,1,0.3,1) both" }}
+      >
+        <div>
+          <h3 className="font-display text-xl sm:text-2xl font-medium text-white">{piece.title}</h3>
+          <p className="label mt-1 text-xs text-gold font-semibold">{piece.category}</p>
+        </div>
+        <button
+          type="button"
+          aria-label="Close dialog"
+          onClick={onClose}
+          className="label inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-2 text-xs font-semibold text-white transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-md"
+        >
+          <span>Close</span>
+          <span className="text-sm font-bold">✕</span>
+        </button>
+      </div>
+
+      {/* Main Image View */}
+      <div
+        className="relative flex flex-1 items-center justify-center py-4"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           key={piece.src}
           src={piece.src}
           alt={piece.title}
-          className="max-h-[80svh] w-auto max-w-full object-contain"
+          className="max-h-[70vh] sm:max-h-[76vh] w-auto max-w-full object-contain rounded-sm shadow-2xl transition-all duration-300"
+          style={{ animation: "adLbFade 0.3s cubic-bezier(0.16,1,0.3,1) both" }}
           loading="eager"
         />
-        <div className="mt-5 flex items-end justify-between gap-8">
-          <div>
-            <p className="font-display text-xl font-light text-white/90">{piece.title}</p>
-            <p className="label mt-1 text-gold/70">{piece.category}</p>
-          </div>
-          <p className="label shrink-0 text-white/30">
-            {index + 1} / {pieces.length}
-          </p>
-        </div>
+
+        {pieces.length > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label="Prev"
+              onClick={(e) => {
+                e.stopPropagation();
+                onPrev();
+              }}
+              className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              aria-label="Next"
+              onClick={(e) => {
+                e.stopPropagation();
+                onNext();
+              }}
+              className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
+            >
+              →
+            </button>
+          </>
+        )}
       </div>
 
-      {pieces.length > 1 && (
-        <>
-          <button
-            type="button"
-            aria-label="Prev"
-            onClick={(e) => {
-              e.stopPropagation();
-              onPrev();
-            }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center border border-white/15 text-white/50 transition-all hover:border-gold/50 hover:text-gold sm:left-8"
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            aria-label="Next"
-            onClick={(e) => {
-              e.stopPropagation();
-              onNext();
-            }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center border border-white/15 text-white/50 transition-all hover:border-gold/50 hover:text-gold sm:right-8"
-          >
-            →
-          </button>
-        </>
-      )}
-      <button
-        type="button"
-        aria-label="Close"
-        onClick={onClose}
-        className="label absolute right-5 top-5 text-white/40 transition-colors hover:text-gold"
+      {/* Bottom Footer Bar */}
+      <div
+        className="relative z-10 flex items-center justify-between border-t border-white/10 pt-4"
+        onClick={(e) => e.stopPropagation()}
       >
-        ✕
-      </button>
+        <span className="label text-xs text-white/80 font-medium">
+          Piece <span className="text-gold font-bold">{index + 1}</span> of <span className="text-gold font-bold">{pieces.length}</span>
+        </span>
+        <button
+          type="button"
+          onClick={onClose}
+          className="label text-xs text-white/60 hover:text-gold transition-colors hidden sm:block"
+        >
+          Press ESC to exit
+        </button>
+      </div>
 
       <style>{`
         @keyframes adLbFade {
-          from { opacity:0; transform:scale(0.94) translateY(16px); }
-          to   { opacity:1; transform:scale(1) translateY(0); }
+          from { opacity: 0; transform: scale(0.96); }
+          to   { opacity: 1; transform: scale(1); }
         }
       `}</style>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -124,31 +157,27 @@ function Tile({
   onClick: () => void;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      gsap.set(el, { opacity: 1, scale: 1 });
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setIsVisible(true);
       return;
     }
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { opacity: 0, scale: 0.85 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.6,
-          ease: "power2.out",
-          delay: (index % 12) * 0.035,
-          scrollTrigger: { trigger: el, start: "top 95%", once: true },
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(el);
         }
-      );
-    }, el);
-    return () => ctx.revert();
-  }, [index]);
+      },
+      { rootMargin: "180px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <button
@@ -157,8 +186,13 @@ function Tile({
       data-cursor="view"
       data-cursor-label="View"
       onClick={onClick}
-      className="group relative block aspect-[4/5] h-full w-full overflow-hidden bg-surface-strong"
-      style={{ opacity: 0 }}
+      className="group relative block aspect-[4/5] h-full w-full overflow-hidden bg-surface-strong transition-all duration-500 ease-out"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "scale(1)" : "scale(0.92)",
+        contentVisibility: "auto",
+        containIntrinsicSize: "220px 275px",
+      }}
       aria-label={`View ${piece.title}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -77,15 +77,15 @@ export function CustomCursor() {
     <div
       ref={dotRef}
       aria-hidden
-      className="cursor-dot pointer-events-none fixed left-0 top-0 z-[100] flex items-center justify-center rounded-full mix-blend-difference transition-[width,height] duration-300 ease-out"
+      className="cursor-dot pointer-events-none fixed left-0 top-0 z-[100] flex items-center justify-center rounded-full bg-gold text-[#0a0908] shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-[width,height,background-color] duration-300 ease-out"
       style={{
-        width: isExpanded ? (variant === "view" ? 76 : 56) : 10,
-        height: isExpanded ? (variant === "view" ? 76 : 56) : 10,
-        backgroundColor: "#c9a96e",
+        width: isExpanded ? (variant === "view" ? 72 : 54) : 10,
+        height: isExpanded ? (variant === "view" ? 72 : 54) : 10,
+        backgroundColor: isExpanded ? "#d4af37" : "rgba(212,175,55,0.85)",
       }}
     >
       {label && (
-        <span className="label text-[10px] text-[#0c0b09]">{label}</span>
+        <span className="label text-[10px] font-bold text-[#0a0908]">{label}</span>
       )}
     </div>
   );

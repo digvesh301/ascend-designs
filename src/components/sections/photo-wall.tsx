@@ -35,34 +35,29 @@ function ProjectTile({
   onClick: () => void;
 }) {
   const cardRef = useRef<HTMLButtonElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const el = cardRef.current;
     if (!el) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      gsap.set(el, { clipPath: "inset(0% 0% 0% 0%)", opacity: 1 });
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setIsVisible(true);
       return;
     }
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { clipPath: "inset(100% 0% 0% 0%)", opacity: 0 },
-        {
-          clipPath: "inset(0% 0% 0% 0%)",
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          delay: (index % 4) * 0.08,
-          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(el);
         }
-      );
-    }, el);
-
-    return () => ctx.revert();
-  }, [index]);
+      },
+      { rootMargin: "180px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <button
@@ -71,8 +66,13 @@ function ProjectTile({
       data-cursor="view"
       data-cursor-label="View Project"
       onClick={onClick}
-      className={`group relative block h-full w-full overflow-hidden bg-surface-strong text-left ${LAYOUT_SPAN[project.layout]}`}
-      style={{ clipPath: "inset(100% 0% 0% 0%)", opacity: 0 }}
+      className={`group relative block h-full w-full overflow-hidden bg-surface-strong text-left transition-all duration-700 ease-out ${LAYOUT_SPAN[project.layout]}`}
+      style={{
+        clipPath: isVisible ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)",
+        opacity: isVisible ? 1 : 0,
+        contentVisibility: "auto",
+        containIntrinsicSize: "280px 280px",
+      }}
       aria-label={`View ${project.title}`}
     >
       {/* Image */}
@@ -113,6 +113,8 @@ function ProjectTile({
   );
 }
 
+import { createPortal } from "react-dom";
+
 // ─── Project viewer (case-study lightbox) ──────────────────────────────────
 function ProjectViewer({
   project,
@@ -129,6 +131,12 @@ function ProjectViewer({
   onNextImage: () => void;
   onNextProject: () => void;
 }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const fn = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -139,15 +147,26 @@ function ProjectViewer({
     return () => window.removeEventListener("keydown", fn);
   }, [onClose, onPrevImage, onNextImage]);
 
+  if (!mounted || !project) return null;
+
   const src = project.gallery[imageIndex] ?? project.image;
 
-  return (
-    <div className="fixed inset-0 z-[999] flex flex-col bg-[#080807]/97 backdrop-blur-md">
+  return createPortal(
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={project.title}
+      className="fixed inset-0 z-[99999] flex flex-col justify-between bg-[#080807]/98 backdrop-blur-lg p-5 sm:p-8"
+      onClick={onClose}
+    >
       {/* Top bar */}
-      <div className="flex items-center justify-between px-5 py-5 sm:px-10">
+      <div
+        className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div>
-          <p className="label text-gold/80">{project.category}</p>
-          <h3 className="font-display text-xl font-light text-white sm:text-2xl">
+          <p className="label text-gold font-semibold text-xs">{project.category}</p>
+          <h3 className="font-display text-xl font-medium text-white sm:text-2xl mt-0.5">
             {project.title}
           </h3>
         </div>
@@ -155,21 +174,25 @@ function ProjectViewer({
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="label text-white/40 transition-colors hover:text-gold"
+          className="label inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-2 text-xs font-semibold text-white transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-md"
         >
-          Close ✕
+          <span>Close</span>
+          <span className="text-sm font-bold">✕</span>
         </button>
       </div>
 
       {/* Image */}
-      <div className="relative flex flex-1 items-center justify-center px-4 sm:px-16">
+      <div
+        className="relative flex flex-1 items-center justify-center py-4"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           key={src}
           src={src}
           alt={project.title}
-          className="max-h-[65svh] w-auto max-w-full object-contain"
-          style={{ animation: "pvFade 0.4s cubic-bezier(0.16,1,0.3,1) both" }}
+          className="max-h-[68vh] sm:max-h-[74vh] w-auto max-w-full object-contain rounded-sm shadow-2xl transition-all duration-300"
+          style={{ animation: "pvFade 0.3s cubic-bezier(0.16,1,0.3,1) both" }}
           loading="eager"
         />
         {project.gallery.length > 1 && (
@@ -177,16 +200,22 @@ function ProjectViewer({
             <button
               type="button"
               aria-label="Previous image"
-              onClick={onPrevImage}
-              className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center border border-white/15 text-white/50 transition-colors hover:border-gold/50 hover:text-gold sm:left-6"
+              onClick={(e) => {
+                e.stopPropagation();
+                onPrevImage();
+              }}
+              className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
             >
               ←
             </button>
             <button
               type="button"
               aria-label="Next image"
-              onClick={onNextImage}
-              className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center border border-white/15 text-white/50 transition-colors hover:border-gold/50 hover:text-gold sm:right-6"
+              onClick={(e) => {
+                e.stopPropagation();
+                onNextImage();
+              }}
+              className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/60 text-xl text-white backdrop-blur-md transition-all hover:border-gold hover:bg-gold hover:text-black cursor-pointer shadow-lg"
             >
               →
             </button>
@@ -195,19 +224,22 @@ function ProjectViewer({
       </div>
 
       {/* Bottom info bar */}
-      <div className="flex flex-col gap-5 border-t border-white/10 px-5 py-6 sm:flex-row sm:items-end sm:justify-between sm:px-10">
+      <div
+        className="relative z-10 flex flex-col gap-4 border-t border-white/10 pt-4 sm:flex-row sm:items-end sm:justify-between"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="max-w-xl">
-          <p className="label text-white/40">
+          <p className="label text-xs text-white/80 font-medium">
             {project.location} · {project.year}
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-white/60">
+          <p className="mt-1.5 text-sm leading-relaxed text-white/90 font-normal">
             {project.description}
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-2.5 flex flex-wrap gap-2">
             {project.services.map((s) => (
               <span
                 key={s}
-                className="label border border-white/15 px-2.5 py-1 text-[0.55rem] text-white/50"
+                className="label border border-gold/40 bg-gold/10 px-3 py-1 text-xs text-gold font-medium rounded-full"
               >
                 {s}
               </span>
@@ -215,13 +247,13 @@ function ProjectViewer({
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-6">
-          <p className="label text-white/30">
-            {imageIndex + 1} / {project.gallery.length}
+          <p className="label text-xs text-white/70 font-medium">
+            Photo <span className="text-gold font-bold">{imageIndex + 1}</span> of <span className="text-gold font-bold">{project.gallery.length}</span>
           </p>
           <button
             type="button"
             onClick={onNextProject}
-            className="label inline-flex items-center gap-2 text-white/50 transition-colors hover:text-gold"
+            className="label inline-flex items-center gap-2 text-gold text-xs font-semibold hover:text-white transition-colors"
           >
             Next Project <span aria-hidden>→</span>
           </button>
@@ -234,7 +266,8 @@ function ProjectViewer({
           to   { opacity: 1; transform: scale(1); }
         }
       `}</style>
-    </div>
+    </div>,
+    document.body
   );
 }
 
