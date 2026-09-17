@@ -175,14 +175,14 @@ export function Hero() {
             className="object-cover"
           />
         </div>
-        {/* Base dark scrim */}
-        <div className="absolute inset-0 bg-[#070604]/50" />
-        {/* Gradient: heavy top for nav, lighter mid, heavy bottom for legibility */}
+        {/* Base dark scrim for text readability */}
+        <div className="absolute inset-0 bg-black/55" />
+        {/* Gradient: heavy top for nav, balanced mid, dark bottom for contrast */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg,rgba(7,6,4,0.85) 0%,rgba(7,6,4,0.2) 30%,rgba(7,6,4,0.35) 65%,rgba(7,6,4,0.95) 100%)",
+              "linear-gradient(180deg,rgba(7,6,4,0.9) 0%,rgba(7,6,4,0.45) 40%,rgba(7,6,4,0.65) 75%,rgba(7,6,4,0.98) 100%)",
           }}
         />
       </div>
@@ -198,38 +198,38 @@ export function Hero() {
       {/* ── Main Hero Content ── */}
       <div className="relative z-10 flex flex-1 flex-col items-start justify-center px-6 pt-20 pb-4 sm:px-12 sm:pt-28 lg:px-20 lg:pt-32">
         {/* Eyebrow */}
-        <div data-hero-eyebrow className="mb-3 flex items-center gap-3 opacity-0 translate-y-4 sm:mb-6 sm:gap-4">
-          <span className="block h-px w-8 bg-gold/70 sm:w-12" />
-          <span className="label text-[0.5625rem] tracking-[0.28em] text-gold sm:text-[0.6875rem]">
+        <div data-hero-eyebrow className="mb-4 flex items-center gap-3 opacity-0 translate-y-4 sm:mb-6 sm:gap-4">
+          <span className="block h-px w-8 bg-gold sm:w-12" />
+          <span className="label text-xs sm:text-sm tracking-[0.18em] text-gold font-semibold drop-shadow-sm">
             Architecture · Interiors · Turnkey
           </span>
         </div>
 
         {/* Headline — each character animates individually */}
         <h1
-          className="max-w-5xl font-display font-light leading-[1.0] tracking-tight text-white"
+          className="max-w-5xl font-display font-medium leading-[1.05] tracking-normal text-white drop-shadow-md"
           style={{ perspective: "800px" }}
         >
           {/* Line 1 */}
-          <span data-hero-line1 className="block text-[clamp(2.35rem,6.8vw,7.5rem)]">
+          <span data-hero-line1 className="block text-[clamp(2.5rem,7vw,7.5rem)] font-medium">
             <AnimChars text="Designing Spaces" />
           </span>
           {/* Line 2 — italic + gold */}
-          <span data-hero-line2 className="block text-[clamp(2.35rem,6.8vw,7.5rem)]">
-            <AnimChars text="With Intention." className="italic text-gold" />
+          <span data-hero-line2 className="block text-[clamp(2.5rem,7vw,7.5rem)] font-normal">
+            <AnimChars text="With Intention." className="italic text-gold drop-shadow-[0_2px_12px_rgba(212,175,55,0.25)]" />
           </span>
         </h1>
 
         {/* Rule */}
         <span
           data-hero-rule
-          className="mt-5 block h-px w-16 bg-gold/60 origin-left scale-x-0 sm:mt-7 sm:w-24"
+          className="mt-6 block h-[2px] w-20 bg-gold origin-left scale-x-0 sm:mt-8 sm:w-28"
         />
 
         {/* Sub-heading */}
         <p
           data-hero-sub
-          className="mt-4 max-w-lg text-[0.875rem] leading-relaxed text-white/70 opacity-0 translate-y-4 sm:mt-6 sm:text-[0.9375rem] md:text-base"
+          className="mt-5 max-w-xl text-base sm:text-lg md:text-xl font-normal leading-relaxed text-white/95 opacity-0 translate-y-4 sm:mt-7 drop-shadow-sm"
         >
           Architecture, interiors and turnkey execution — shaped around the
           people who will live in the space, delivered as one continuous
@@ -237,11 +237,11 @@ export function Hero() {
         </p>
 
         {/* CTAs */}
-        <div className="mt-5 flex flex-row flex-wrap items-center gap-3 sm:mt-7 sm:gap-5">
+        <div className="mt-6 flex flex-row flex-wrap items-center gap-3 sm:mt-8 sm:gap-5">
           <Link
             data-hero-cta
             href="#work"
-            className="btn-shimmer label inline-flex items-center justify-center gap-2 px-5 py-3 text-[0.625rem] text-[#0c0b09] opacity-0 translate-y-5 transition-opacity hover:opacity-90 sm:gap-3 sm:px-8 sm:py-4 sm:text-xs"
+            className="btn-shimmer label inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-xs text-[#0a0908] font-bold opacity-0 translate-y-5 transition-opacity hover:opacity-90 sm:gap-3 sm:px-8 sm:py-4 sm:text-sm shadow-lg"
           >
             <AnimChars text="Explore Portfolio" />
             <span aria-hidden>→</span>
@@ -249,7 +249,7 @@ export function Hero() {
           <Link
             data-hero-cta
             href="/about"
-            className="label inline-flex items-center justify-center gap-2 border border-white/25 px-5 py-3 text-[0.625rem] text-white/80 opacity-0 translate-y-5 transition-colors hover:border-gold/60 hover:text-gold sm:gap-3 sm:px-8 sm:py-4 sm:text-xs"
+            className="label inline-flex items-center justify-center gap-2.5 border border-white/40 bg-black/30 px-6 py-3.5 text-xs text-white font-semibold opacity-0 translate-y-5 transition-colors hover:border-gold hover:text-gold sm:gap-3 sm:px-8 sm:py-4 sm:text-sm backdrop-blur-sm"
           >
             <AnimChars text="Our Story" />
           </Link>

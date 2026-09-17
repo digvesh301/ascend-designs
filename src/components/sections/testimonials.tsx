@@ -146,7 +146,7 @@ export function Testimonials() {
               {/* Quote text */}
               <blockquote
                 key={index}
-                className="font-display text-[clamp(1.5rem,3.5vw,2.75rem)] font-light italic leading-[1.3] text-ink"
+                className="font-display text-[clamp(1.5rem,3.5vw,2.75rem)] font-medium italic leading-[1.35] text-ink drop-shadow-sm"
                 style={{
                   animation: `${direction > 0 ? "slideInRight" : "slideInLeft"} 0.55s cubic-bezier(0.16,1,0.3,1) both`,
                 }}
@@ -157,11 +157,11 @@ export function Testimonials() {
               {/* Attribution */}
               <div className="mt-10 flex flex-col gap-1 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="font-display text-lg text-ink">{current.author}</p>
-                  <p className="label mt-1 text-gold/80">
+                  <p className="font-display text-xl font-medium text-ink">{current.author}</p>
+                  <p className="label mt-1 text-gold text-xs font-semibold">
                     {current.role} — {current.project}
                   </p>
-                  <p className="mt-1 text-xs text-ink-faint">{current.location}</p>
+                  <p className="mt-1 text-sm text-ink-faint font-medium">{current.location}</p>
                 </div>
 
                 {/* Navigation */}

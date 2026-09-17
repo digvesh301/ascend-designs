@@ -208,7 +208,7 @@ export function Footer() {
               </span>
             </Link>
 
-            <p className="max-w-md text-xs leading-relaxed text-white/50">
+            <p className="max-w-md text-sm leading-relaxed text-white/80 font-normal">
               Thoughtful residential, commercial, and turnkey architectural
               interiors crafted with material authenticity and spatial clarity.
             </p>
@@ -216,16 +216,16 @@ export function Footer() {
 
           {/* Live Studio Clock & Location Badge */}
           <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center lg:items-end">
-            <div className="flex items-center gap-3 rounded-full border border-white/[0.08] bg-white/[0.02] px-4 py-2 backdrop-blur-sm transition-colors hover:border-gold/40">
+            <div className="flex items-center gap-3 rounded-full border border-white/20 bg-white/[0.04] px-4 py-2 backdrop-blur-sm transition-colors hover:border-gold">
               <span className="relative flex h-2 w-2">
                 <span className="status-pulse absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
               </span>
-              <span className="label text-[0.5625rem] tracking-[0.16em] text-white/60">
+              <span className="label text-xs tracking-[0.14em] text-white/90 font-medium">
                 Ahmedabad, IN
               </span>
-              <span className="text-white/20">•</span>
-              <span className="font-mono text-[0.6875rem] tracking-wider text-gold">
+              <span className="text-white/40">•</span>
+              <span className="font-mono text-xs tracking-wider text-gold font-semibold">
                 {istTime || "10:00 AM"} IST
               </span>
             </div>
@@ -233,7 +233,7 @@ export function Footer() {
         </div>
 
         {/* ── Social Links & Quick Navigation ──────────────────────────────── */}
-        <div className="footer-row mt-10 flex flex-wrap items-center justify-between gap-6 border-t border-white/[0.06] pt-6">
+        <div className="footer-row mt-10 flex flex-wrap items-center justify-between gap-6 border-t border-white/10 pt-6">
           <div className="flex flex-wrap items-center gap-6 sm:gap-8">
             {socialLinks.map((s) => (
               <a
@@ -241,7 +241,7 @@ export function Footer() {
                 href={s.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative label text-[0.5625rem] tracking-[0.2em] text-white/40 transition-colors duration-300 hover:text-gold"
+                className="group relative label text-xs tracking-[0.16em] text-white/80 font-semibold transition-colors duration-300 hover:text-gold"
               >
                 <span className="inline-block transition-transform duration-300 group-hover:-translate-y-0.5">
                   {s.label.toUpperCase()}
@@ -254,7 +254,7 @@ export function Footer() {
           <div className="flex items-center gap-4">
             <Link
               href="/contact"
-              className="group label inline-flex items-center gap-2 text-[0.5625rem] tracking-[0.2em] text-gold/80 hover:text-gold"
+              className="group label inline-flex items-center gap-2 text-xs tracking-[0.16em] text-gold font-semibold hover:text-gold"
             >
               <span>Work with Us</span>
               <span
@@ -269,13 +269,13 @@ export function Footer() {
 
         {/* ── Divider ──────────────────────────────────────────────────────── */}
         <div
-          className="footer-line mt-6 h-px origin-left bg-gradient-to-r from-white/[0.08] via-gold/30 to-white/[0.08]"
+          className="footer-line mt-6 h-px origin-left bg-gradient-to-r from-white/10 via-gold/40 to-white/10"
           style={{ transform: "scaleX(0)" }}
         />
 
         {/* ── Bottom Bar: Copyright, Contact & Interactive Back-to-Top ─────── */}
         <div className="footer-row mt-6 flex flex-col-reverse items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <p className="label text-[0.5rem] tracking-[0.16em] text-white/30">
+          <p className="label text-xs tracking-[0.14em] text-white/60 font-medium">
             © {new Date().getFullYear()} ASCEND DESIGNS. ALL RIGHTS RESERVED.
           </p>
 

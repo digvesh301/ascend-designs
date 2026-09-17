@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider, themeInitScript } from "@/components/providers/theme-provider";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
@@ -10,17 +10,17 @@ import { CustomCursor } from "@/components/cursor/custom-cursor";
 import { LoaderProvider, bootScript } from "@/components/loader/loader";
 import { FloatingContact } from "@/components/ui/floating-contact";
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600", "700", "800"],
   style: ["normal", "italic"],
 });
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -49,7 +49,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${cormorant.variable} ${dmSans.variable} h-full antialiased`}
+      className={`${playfair.variable} ${plusJakarta.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-surface text-ink">
         <Script

@@ -116,8 +116,8 @@ function ServicePanel({
       <div className="relative z-10 flex w-full flex-col justify-between p-5 sm:p-7">
         {/* Number */}
         <span
-          className={`font-display text-2xl font-light transition-colors duration-500 sm:text-3xl ${
-            active ? "text-gold" : "text-white/40"
+          className={`font-display text-3xl font-semibold transition-colors duration-500 sm:text-4xl ${
+            active ? "text-gold drop-shadow-sm" : "text-white/70"
           }`}
         >
           {svc.num}
@@ -128,38 +128,38 @@ function ServicePanel({
           className="flex items-center justify-between transition-opacity duration-300 lg:block lg:justify-start"
           style={{ opacity: active ? 0 : 1 }}
         >
-          <span className="label text-white/70 lg:hidden">{svc.title}</span>
+          <span className="label text-white/90 text-sm font-semibold lg:hidden">{svc.title}</span>
           <span
             aria-hidden
-            className="hidden whitespace-nowrap font-display text-xl text-white/70 lg:block"
+            className="hidden whitespace-nowrap font-display text-2xl font-medium tracking-wide text-white/90 lg:block"
             style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
           >
             {svc.title}
           </span>
-          <span aria-hidden className="text-white/30 lg:hidden">+</span>
+          <span aria-hidden className="text-white/60 font-bold lg:hidden">+</span>
         </div>
 
         {/* Expanded content */}
         <div
-          className="max-w-lg transition-all duration-500"
+          className="max-w-xl transition-all duration-500"
           style={{
             opacity: active ? 1 : 0,
             transform: active ? "translateY(0)" : "translateY(14px)",
             transitionDelay: active ? "220ms" : "0ms",
           }}
         >
-          <p className="label mb-2 text-gold/80">{svc.short}</p>
-          <h3 className="font-display text-2xl font-light text-white sm:text-3xl lg:text-4xl">
+          <p className="label mb-2 text-gold text-xs font-semibold tracking-[0.16em]">{svc.short}</p>
+          <h3 className="font-display text-3xl font-medium text-white sm:text-4xl lg:text-5xl">
             {svc.title}
           </h3>
-          <p className="mt-4 max-w-md text-sm leading-relaxed text-white/70 sm:text-base">
+          <p className="mt-4 max-w-lg text-base sm:text-lg leading-relaxed text-white/95 font-normal">
             {svc.description}
           </p>
-          <ul className="mt-5 flex flex-wrap gap-2">
+          <ul className="mt-6 flex flex-wrap gap-2.5">
             {svc.deliverables.map((d, i) => (
               <li
                 key={d}
-                className="label border border-gold/30 px-3 py-1 text-[0.5625rem] text-gold/90 transition-all duration-400"
+                className="label border border-gold/40 bg-gold/10 px-3.5 py-1.5 text-xs text-gold font-medium rounded-full transition-all duration-400"
                 style={{
                   opacity: active ? 1 : 0,
                   transform: active ? "translateY(0)" : "translateY(8px)",
@@ -174,7 +174,7 @@ function ServicePanel({
             <Link
               href={svc.href}
               onClick={(e) => e.stopPropagation()}
-              className="label mt-6 inline-flex items-center gap-2 text-gold transition-all duration-400 hover:gap-3"
+              className="label mt-7 inline-flex items-center gap-2.5 text-gold text-xs sm:text-sm font-semibold transition-all duration-400 hover:gap-3.5"
               style={{
                 opacity: active ? 1 : 0,
                 transform: active ? "translateY(0)" : "translateY(8px)",

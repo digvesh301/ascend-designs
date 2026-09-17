@@ -172,13 +172,13 @@ export function TurnkeyProcess() {
                       ref={(el) => {
                         numberRefs.current[i] = el;
                       }}
-                      className="label text-ink-faint transition-colors duration-300"
+                      className="label text-sm font-semibold text-gold transition-colors duration-300"
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <h3 className="mt-2 font-display text-xl text-ink sm:text-2xl">{step.title}</h3>
+                    <h3 className="mt-2 font-display text-2xl font-medium text-ink sm:text-3xl">{step.title}</h3>
                     <p
-                      className={`mt-2 max-w-sm text-sm leading-relaxed text-ink-soft sm:text-base ${
+                      className={`mt-2 max-w-md text-base sm:text-lg leading-relaxed text-ink-soft font-normal ${
                         isEven ? "lg:ml-auto" : ""
                       }`}
                     >

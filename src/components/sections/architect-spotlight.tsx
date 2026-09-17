@@ -133,11 +133,10 @@ export function ArchitectSpotlight() {
       </span>
 
       <div className="relative mx-auto max-w-[1600px] px-6 sm:px-12 lg:px-20">
-        {/* Label */}
         <Reveal>
           <div className="mb-16 flex items-center gap-5">
-            <span className="h-px w-10 bg-gold/50" />
-            <p className="label text-gold/80">The Architect</p>
+            <span className="h-px w-10 bg-gold" />
+            <p className="label text-gold font-semibold">The Architect</p>
           </div>
         </Reveal>
 
@@ -145,14 +144,14 @@ export function ArchitectSpotlight() {
           {/* Left: name + quote + bio */}
           <div className="lg:col-span-6">
             <Reveal>
-              <h2 className="font-display text-[clamp(2.5rem,5vw,4.5rem)] font-light leading-[1.05] text-ink">
+              <h2 className="font-display text-[clamp(2.5rem,5vw,4.5rem)] font-medium leading-[1.05] text-ink">
                 {siteConfig.founder}
               </h2>
-              <p className="label mt-3 text-gold/70">{siteConfig.founderTitle}</p>
+              <p className="label mt-3 text-gold text-sm font-semibold">{siteConfig.founderTitle}</p>
             </Reveal>
 
             <Reveal delay={0.1}>
-              <blockquote className="mt-10 border-l-2 border-gold/40 pl-6 font-display text-xl italic leading-relaxed text-ink/80 sm:text-2xl">
+              <blockquote className="mt-10 border-l-2 border-gold pl-6 font-display text-2xl italic leading-relaxed text-ink sm:text-3xl">
                 &ldquo;Architecture is not merely about constructing walls — it is
                 about sculpting light, proportion, and human emotion into living
                 sanctuaries.&rdquo;
@@ -160,7 +159,7 @@ export function ArchitectSpotlight() {
             </Reveal>
 
             <Reveal delay={0.2}>
-              <p className="mt-8 text-sm leading-relaxed text-ink-soft sm:text-base">
+              <p className="mt-8 text-base sm:text-lg leading-relaxed text-ink-soft font-normal">
                 {siteConfig.founderBio}
               </p>
             </Reveal>
@@ -169,7 +168,7 @@ export function ArchitectSpotlight() {
               <div className="mt-10 flex flex-wrap items-center gap-4">
                 <Link
                   href="/contact"
-                  className="label inline-flex items-center gap-2 border border-line-strong px-6 py-3.5 text-ink-soft transition-colors hover:border-gold/50 hover:text-gold"
+                  className="label inline-flex items-center gap-2.5 border border-line-strong px-7 py-4 text-xs font-semibold text-ink transition-colors hover:border-gold hover:text-gold"
                 >
                   Schedule Consultation <span aria-hidden>→</span>
                 </Link>

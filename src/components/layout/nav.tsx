@@ -271,8 +271,8 @@ export function Nav() {
                   href={link.href}
                   prefetch={false}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className={`group relative py-1 text-[0.6875rem] font-medium tracking-[0.2em] uppercase transition-colors duration-300 ${
-                    isActive ? "text-gold" : "text-ink-soft hover:text-ink"
+                  className={`group relative py-1 text-xs font-semibold tracking-[0.15em] uppercase transition-colors duration-300 ${
+                    isActive ? "text-gold" : "text-white/90 hover:text-gold"
                   }`}
                 >
                   <span className="relative z-10 inline-block transition-transform duration-300 group-hover:-translate-y-0.5">
@@ -281,12 +281,12 @@ export function Nav() {
 
                   {/* Active indicator dot */}
                   {isActive && (
-                    <span className="absolute -left-2.5 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-gold shadow-[0_0_8px_#c9a96e]" />
+                    <span className="absolute -left-2.5 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-gold shadow-[0_0_8px_#d4af37]" />
                   )}
 
                   {/* Sliding underline */}
                   <span
-                    className={`absolute bottom-0 left-0 h-[1.5px] bg-gold/90 transition-all duration-300 ease-out ${
+                    className={`absolute bottom-0 left-0 h-[1.5px] bg-gold transition-all duration-300 ease-out ${
                       isActive
                         ? "w-full opacity-100"
                         : "w-0 opacity-0 group-hover:w-full group-hover:opacity-100"
@@ -303,7 +303,7 @@ export function Nav() {
             <button
               type="button"
               onClick={() => setInquiryOpen(true)}
-              className="group relative inline-flex items-center gap-2.5 overflow-hidden border border-white/20 bg-white/[0.03] px-5 py-2.5 text-[0.6875rem] font-medium tracking-[0.2em] uppercase text-ink backdrop-blur-sm transition-all duration-300 hover:border-gold/70 hover:bg-gold/[0.08] hover:text-gold hover:shadow-[0_0_20px_rgba(201,169,110,0.2)] cursor-pointer"
+              className="group relative inline-flex items-center gap-2.5 overflow-hidden border border-gold/50 bg-gold/10 px-6 py-2.5 text-xs font-semibold tracking-[0.16em] uppercase text-gold backdrop-blur-sm transition-all duration-300 hover:border-gold hover:bg-gold hover:text-black hover:shadow-[0_0_20px_rgba(212,175,55,0.25)] cursor-pointer"
             >
               {/* Shimmer sweep highlight */}
               <span
